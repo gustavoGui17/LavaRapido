@@ -1,16 +1,26 @@
-const create = (req, res) => {
+const userService = require('../services/userService')
 
-    const {name, email, password} = req.body;
+const create = async (req, res) => {
 
-    if (!name || !email || !password){
-        res.status(400).send({ message: "Por favor prencher todos os campos"})
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+        res.status(400).send({ message: "Por favor prencher todos os campos" })
+    }
+
+    const user = await userService.create(req.body)
+
+    if (!user) {
+        return res.status(400).send({ message: "Erro na criacao do usuario" });
     }
 
     res.status(201).send({
-        message: "User criado com suceso",
+        message: "Usuario criado com suceso",
         user: {
+            id: user._id,
             name,
             email,
+            password,
         }
     })
 };
