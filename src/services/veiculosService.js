@@ -1,7 +1,13 @@
 const Veiculo = require('../models/Veiculo');
 
-const create = (body) => Veiculo.create(body)
+const createService = (body) => Veiculo.create(body)
+
+const findAllService = () => Veiculo.find();
+
+const findByIdService = (id) => Veiculo.findById(id);
 
 module.exports = {
-    create,
+    createService,
+    findAllService,
+    findByIdService,
 }
