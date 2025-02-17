@@ -4,5 +4,6 @@ const veiculoControler = require('../controllers/veiculoControler');
 route.post("/", veiculoControler.create)
 route.get("/", veiculoControler.findAll);
 route.get("/:id", veiculoControler.findById)
+route.patch("/:id", veiculoControler.update)
 
 module.exports = route;

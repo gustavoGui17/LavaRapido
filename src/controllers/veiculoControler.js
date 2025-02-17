@@ -53,4 +53,37 @@ const findById = async (req, res) => {
     res.send(veiculo);
 }
 
-module.exports = { create, findAll, findById}
+const update = async (req, res) => {
+    const {placa, modelo, cor, nomeCliente, contato} = req.body;
+
+    if (!placa && !modelo && !cor && !nomeCliente && !contato){
+        res.status(400).send({ message: "Por favor prencher todos os campos"});
+    }
+
+    const id = req.params.id
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(400).send({ message: "ID invalido" });
+    }
+
+    const veiculo = await veiculoService.findByIdService(id)
+
+    if (!veiculo) {
+        return res.status(400).send({ message: "Veiculo não encontrado" });
+    }
+
+      await veiculoService.updateService(
+            id,
+            placa,
+            modelo,
+            cor,
+            nomeCliente,
+            contato
+        )
+
+    res.send({message: "Veiculo alterado com sucesso"})
+
+}
+
+
+module.exports = { create, findAll, findById, update}
