@@ -1,5 +1,4 @@
 const veiculoService = require('../services/veiculosService')
-const mongoose = require ("mongoose")
 
 const create = async (req, res) => {
     
@@ -40,15 +39,7 @@ const findAll = async (req, res) => {
 const findById = async (req, res) => {
     const id = req.params.id;
 
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(400).send({ message: "ID invalido" });
-    }
-
     const veiculo = await veiculoService.findByIdService(id);
-
-    if (!veiculo) {
-        return res.status(400).send({ message: "Veiculo não encontrado" });
-    }
 
     res.send(veiculo);
 }
@@ -57,20 +48,10 @@ const update = async (req, res) => {
     const {placa, modelo, cor, nomeCliente, contato} = req.body;
 
     if (!placa && !modelo && !cor && !nomeCliente && !contato){
-        res.status(400).send({ message: "Por favor prencher todos os campos"});
+        res.status(400).send({ message: "Por favor prencher um campo para editar"});
     }
 
-    const id = req.params.id
-
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(400).send({ message: "ID invalido" });
-    }
-
-    const veiculo = await veiculoService.findByIdService(id)
-
-    if (!veiculo) {
-        return res.status(400).send({ message: "Veiculo não encontrado" });
-    }
+    const {id, veiculo} = req;
 
       await veiculoService.updateService(
             id,
