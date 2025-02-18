@@ -1,4 +1,4 @@
-const Veiculo = require('../models/Veiculo');
+import Veiculo from "../models/Veiculo.js";
 
 const createService = (body) => Veiculo.create(body)
 
@@ -16,7 +16,7 @@ const updateService = (
         { _id: id },
         { placa, modelo, cor, nomeCliente, contato })
 
-module.exports = {
+export default {
     createService,
     findAllService,
     findByIdService,

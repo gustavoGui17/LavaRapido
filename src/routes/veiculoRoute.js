@@ -1,10 +1,12 @@
-const route = require('express').Router();
-const veiculoControler = require('../controllers/veiculoControler');
-const { validId, validVeiculo } = require('../middlewares/global.middlewares')
+import  express  from 'express';
+import veiculoControler from "../controllers/veiculoControler.js"
+import { validId, validVeiculo } from '../middlewares/global.middlewares.js'
 
-route.post("/", veiculoControler.create)
-route.get("/", veiculoControler.findAll);
-route.get("/:id", validId, validVeiculo, veiculoControler.findById)
-route.patch("/:id", validId, validVeiculo, veiculoControler.update)
+const router = express.Router();
 
-module.exports = route;
+router.post("/", veiculoControler.create)
+router.get("/", veiculoControler.findAll);
+router.get("/:id", validId, validVeiculo, veiculoControler.findById)
+router.patch("/:id", validId, validVeiculo, veiculoControler.update)
+
+export default router

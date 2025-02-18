@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 
 const veiculoSchema = new mongoose.Schema({
     placa: {
@@ -35,4 +35,4 @@ const veiculoSchema = new mongoose.Schema({
 
 const Veiculo = mongoose.model("Veiculo", veiculoSchema);
 
-module.exports = Veiculo;
+export default Veiculo;

@@ -1,12 +1,9 @@
-const express = require("express");
+import express from "express";
+import connetcDataBase from "./src/database/db.js";
+import userRoute from "./src/routes/userRoute.js";
+import veiculoRoute from "./src/routes/veiculoRoute.js";
 const app = express();
-const userRoute = require('./src/routes/userRoute')
-
-const connetcDataBase = require('./src/database/db')
-
-const veiculoRoute = require('./src/routes/veiculoRoute')
 const port = 3000;
-
 
 connetcDataBase()
 app.use(express.json());
