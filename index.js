@@ -2,8 +2,11 @@ import express from "express";
 import connetcDataBase from "./src/database/db.js";
 import userRoute from "./src/routes/userRoute.js";
 import veiculoRoute from "./src/routes/veiculoRoute.js";
+import dotenv from "dotenv";
+dotenv.config();
+
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 connetcDataBase()
 app.use(express.json());
