@@ -1,8 +1,11 @@
 import express from "express";
 import connetcDataBase from "./src/database/db.js";
-import userRoute from "./src/routes/userRoute.js";
-import veiculoRoute from "./src/routes/veiculoRoute.js";
 import dotenv from "dotenv";
+
+import veiculoRoute from "./src/routes/veiculoRoute.js";
+import userRoute from "./src/routes/userRoute.js";
+import authRoute from "./src/routes/auth.route.js";
+
 dotenv.config();
 
 const app = express();
@@ -12,6 +15,7 @@ connetcDataBase()
 app.use(express.json());
 
 app.use("/user", userRoute);
+app.use("/auth", authRoute);
 app.use("/veiculo", veiculoRoute);
 
 
