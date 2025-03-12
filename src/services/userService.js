@@ -2,7 +2,10 @@ import User from "../models/User.js";
 
 const createService = (body) => User.create(body);
 
-const findAllService = () => User.find();
+// const findAllService = () => User.find();
+const findAllService = async () => {
+    return await User.find().populate("veiculos");
+};
 
 const findByIdService = (id) => User.findById(id);
 

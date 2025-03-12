@@ -22,10 +22,15 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["admin", "funcionario"],
-        default: "funcionario"
+        enum: ["admin", "cliente"],
+        default: "cliente"
     },
+    veiculos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Veiculo"
+    }],
     createdAt: {
+        select: false,
         type: Date,
         default: Date.now
     }

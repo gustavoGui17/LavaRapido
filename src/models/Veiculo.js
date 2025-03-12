@@ -30,6 +30,12 @@ const veiculoSchema = new mongoose.Schema({
         type: String,
         enum: ["pendente", "em atendimento", "finalizado"],
         default: "pendente"
+    },
+
+    usuario: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     }
 })
 

@@ -1,32 +1,32 @@
 import veiculoService from "../services/veiculosService.js"
 
 const create = async (req, res) => {
-
     try {
-        const { placa, modelo, cor, nomeCliente, contato } = req.body;
+        const { placa, modelo, cor, nomeCliente, contato, usuario } = req.body;
 
-        if (!placa || !modelo || !cor || !nomeCliente || !contato) {
-            res.status(400).send({ message: "Por favor prencher todos os campos" });
+        if (!placa || !modelo || !cor || !nomeCliente || !contato || !usuario) {
+            return res.status(400).send({ message: "Por favor, preencha todos os campos" });
         }
 
-        const veiculo = await veiculoService.createService(req.body)
+        const veiculo = await veiculoService.createService({
+            placa,
+            modelo,
+            cor,
+            nomeCliente,
+            contato,
+            usuario
+        });
 
         if (!veiculo) {
-            return res.status(400).send({ message: "Erro na criacao do usuario" });
+            return res.status(400).send({ message: "Erro na criação do veículo" });
         }
 
         res.status(201).send({
-            message: "Veiculo cadastrado",
-            veiculo: {
-                placa,
-                modelo,
-                cor,
-                nomeCliente,
-                contato,
-            }
+            message: "Veículo cadastrado com sucesso",
+            veiculo
         });
     } catch (err) {
-        res.status(500).send({ message: err.message })
+        res.status(500).send({ message: err.message });
     }
 };
 
