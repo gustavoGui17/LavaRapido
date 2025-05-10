@@ -1,8 +1,6 @@
 import User from "../models/User.js"
 import Veiculo from "../models/Veiculo.js";
 
-// const createService = (body) => Veiculo.create(body)
-
 const createService = async (veiculoData) => {
     const veiculo = new Veiculo(veiculoData);
     await veiculo.save();

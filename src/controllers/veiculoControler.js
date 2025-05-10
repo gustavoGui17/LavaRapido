@@ -4,7 +4,7 @@ const create = async (req, res) => {
     try {
         const { placa, modelo, cor, nomeCliente, contato, usuario } = req.body;
 
-        if (!placa || !modelo || !cor || !nomeCliente || !contato || !usuario) {
+        if (!placa || !modelo || !cor || !nomeCliente || !contato) {
             return res.status(400).send({ message: "Por favor, preencha todos os campos" });
         }
 
@@ -14,7 +14,7 @@ const create = async (req, res) => {
             cor,
             nomeCliente,
             contato,
-            usuario
+            usuario: req.userId,
         });
 
         if (!veiculo) {
