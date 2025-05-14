@@ -1,14 +1,20 @@
-import veiculoService from "../services/veiculosService.js"
+import {
+    createService,
+    findAllService,
+    countVeiculos,
+    findByIdService,
+    updateService
+} from "../services/veiculoService.js";
 
 const create = async (req, res) => {
     try {
         const { placa, modelo, cor, nomeCliente, contato, usuario } = req.body;
 
-        if (!placa || !modelo || !cor || !nomeCliente || !contato) {
+        if (!placa || !modelo || !cor || !nomeCliente || !contato || !usuario) {
             return res.status(400).send({ message: "Por favor, preencha todos os campos" });
         }
 
-        const veiculo = await veiculoService.createService({
+        const veiculo = await createService({
             placa,
             modelo,
             cor,
@@ -32,13 +38,49 @@ const create = async (req, res) => {
 
 const findAll = async (req, res) => {
     try {
-        const veiculos = await veiculoService.findAllService();
+        let { limit, offset } = req.query;
+
+        limit = Number(limit);
+        offset = Number(offset);
+
+        if (!limit) {
+            limit = 5
+        }
+
+        if (!offset) {
+            offset = 0
+        }
+
+        const veiculos = await findAllService(offset, limit);
+        const total = await countVeiculos();
+        const currentUrl = req.baseUrl
+
+        const next = offset + limit;
+        const nextUrl = next < total ? `${currentUrl}?limit=${limit}&offset=${next}` : null;
+
+        const previous = offset - limit < 0 ? null : offset - limit;
+        const previousUrl = previous != null ? `${currentUrl}?limit=${limit}&offset=${previous}` : null;
 
         if (veiculos.length === 0) {
             return res.status(400).send({ message: "NãO tem Veiculos cadastrados" });
         }
 
-        res.send(veiculos)
+        res.send({
+            nextUrl,
+            previous,
+            limit,
+            offset,
+            total,
+
+            results: veiculos.map(item => ({
+                id: item. _id,
+                placa: item.placa,
+                modelo: item.modelo,
+                cor: item.cor,
+                nomeCliente: item.nomeCliente,
+                contato: item.contato
+            }))
+        })
     } catch (err) {
         res.status(500).send({ message: err.message })
     }
@@ -48,7 +90,7 @@ const findById = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const veiculo = await veiculoService.findByIdService(id);
+        const veiculo = await findByIdService(id);
 
         res.send(veiculo);
     } catch (err) {
@@ -66,7 +108,7 @@ const update = async (req, res) => {
 
         const { id, veiculo } = req;
 
-        await veiculoService.updateService(
+        await updateService(
             id,
             placa,
             modelo,
@@ -82,4 +124,4 @@ const update = async (req, res) => {
 
 };
 
-export default  { create, findAll, findById, update }
+export { create, findAll, findById, update }

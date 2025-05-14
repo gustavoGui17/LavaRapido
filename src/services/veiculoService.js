@@ -1,7 +1,7 @@
 import User from "../models/User.js"
 import Veiculo from "../models/Veiculo.js";
 
-const createService = async (veiculoData) => {
+export const createService = async (veiculoData) => {
     const veiculo = new Veiculo(veiculoData);
     await veiculo.save();
 
@@ -20,11 +20,13 @@ const createService = async (veiculoData) => {
     return veiculo;
 };
 
-const findAllService = () => Veiculo.find();
+export const findAllService = (offset, limit) => Veiculo.find().sort({_id: -1}).skip(offset).limit(limit).populate("usuario");
 
-const findByIdService = (id) => Veiculo.findById(id);
+export const countVeiculos = () => Veiculo.countDocuments();
 
-const updateService = (
+export const findByIdService = (id) => Veiculo.findById(id);
+
+export const updateService = (
     id,
     placa,
     modelo,
@@ -34,9 +36,10 @@ const updateService = (
         { _id: id },
         { placa, modelo, cor, nomeCliente, contato })
 
-export default {
-    createService,
-    findAllService,
-    findByIdService,
-    updateService,
-}
+// export default {
+//     createService,
+//     findAllService,
+//     countVeiculos,
+//     findByIdService,
+//     updateService,
+// }

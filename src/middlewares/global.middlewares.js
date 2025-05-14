@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import userService from "../services/userService.js"
-import veiculoService from "../services/veiculosService.js"
+import { findByIdService as findVeiculoByIdService } from "../services/veiculoService.js";
 
 export const validId = (req, res, next) => {
 
@@ -40,7 +40,7 @@ export const validVeiculo = async (req, res, next) => {
     try {
         const id = req.params.id;
 
-        const veiculo = await veiculoService.findByIdService(id)
+       const veiculo = await findVeiculoByIdService(id);
 
         if (!veiculo) {
             return res.status(400).send({ message: "Veiculo não encontrado" });
