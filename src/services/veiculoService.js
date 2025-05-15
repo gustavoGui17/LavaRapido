@@ -6,7 +6,7 @@ export const createService = async (veiculoData) => {
     await veiculo.save();
 
     const user = await User.findById(veiculo.usuario);
-    
+
     if (!user) {
         throw new Error("Usuário não encontrado!");
     }
@@ -20,11 +20,19 @@ export const createService = async (veiculoData) => {
     return veiculo;
 };
 
-export const findAllService = (offset, limit) => Veiculo.find().sort({_id: -1}).skip(offset).limit(limit).populate("usuario");
+export const findAllService = (offset, limit) => Veiculo.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("usuario");
 
 export const countVeiculos = () => Veiculo.countDocuments();
 
-export const findByIdService = (id) => Veiculo.findById(id);
+export const topVeiculoService = () => Veiculo.findOne()
+
+export const findByIdService = (id) => Veiculo.findById(id).populate("usuario");
+
+export const searchByPlacaService = (placa) =>
+  Veiculo.find({
+    placa: { $regex: placa || "", $options: "i" },
+  }).sort({ _id: -1 }).populate("usuario");
+
 
 export const updateService = (
     id,
@@ -35,11 +43,3 @@ export const updateService = (
     contato) => Veiculo.findOneAndUpdate(
         { _id: id },
         { placa, modelo, cor, nomeCliente, contato })
-
-// export default {
-//     createService,
-//     findAllService,
-//     countVeiculos,
-//     findByIdService,
-//     updateService,
-// }

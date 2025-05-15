@@ -2,7 +2,9 @@ import {
     createService,
     findAllService,
     countVeiculos,
+    topVeiculoService,
     findByIdService,
+    searchByPlacaService,
     updateService
 } from "../services/veiculoService.js";
 
@@ -51,7 +53,7 @@ const findAll = async (req, res) => {
             offset = 0
         }
 
-        const veiculos = await findAllService(offset, limit);
+        const veiculo = await findAllService(offset, limit);
         const total = await countVeiculos();
         const currentUrl = req.baseUrl
 
@@ -61,7 +63,7 @@ const findAll = async (req, res) => {
         const previous = offset - limit < 0 ? null : offset - limit;
         const previousUrl = previous != null ? `${currentUrl}?limit=${limit}&offset=${previous}` : null;
 
-        if (veiculos.length === 0) {
+        if (veiculo.length === 0) {
             return res.status(400).send({ message: "NãO tem Veiculos cadastrados" });
         }
 
@@ -72,8 +74,8 @@ const findAll = async (req, res) => {
             offset,
             total,
 
-            results: veiculos.map(item => ({
-                id: item. _id,
+            results: veiculo.map(item => ({
+                id: item._id,
                 placa: item.placa,
                 modelo: item.modelo,
                 cor: item.cor,
@@ -86,13 +88,73 @@ const findAll = async (req, res) => {
     }
 };
 
+const topVeiculo = async (req, res) => {
+    try {
+        const veiculo = await topVeiculoService()
+
+        if (!veiculo) {
+            return res.status(400).send({ message: "NãO tem Veiculos cadastrados" });
+        }
+
+        res.send({
+            veiculo: {
+                id: veiculo._id,
+                placa: veiculo.placa,
+                modelo: veiculo.modelo,
+                cor: veiculo.cor,
+                nomeCliente: veiculo.nomeCliente,
+                contato: veiculo.contato
+            }
+        })
+
+    } catch (err) {
+        res.status(500).send({ message: err.message })
+    }
+}
+
 const findById = async (req, res) => {
     try {
         const id = req.params.id;
 
         const veiculo = await findByIdService(id);
 
-        res.send(veiculo);
+        return res.send({
+            veiculo: {
+                id: veiculo._id,
+                placa: veiculo.placa,
+                modelo: veiculo.modelo,
+                cor: veiculo.cor,
+                nomeCliente: veiculo.nomeCliente,
+                contato: veiculo.contato
+            }
+        })
+
+    } catch (err) {
+        res.status(500).send({ message: err.message })
+    }
+};
+
+const searchByPlaca = async (req, res) => {
+    try {
+        const { placa } = req.query;
+
+        const veiculo = await searchByPlacaService(placa);
+
+        if (veiculo.length === 0) {
+            return res.status(400).send({ message: "Nao existe essa placa no sistema" })
+        }
+
+        return res.send({
+            results: veiculo.map(item => ({
+                id: item._id,
+                placa: item.placa,
+                modelo: item.modelo,
+                cor: item.cor,
+                nomeCliente: item.nomeCliente,
+                contato: item.contato
+            }))
+        })
+
     } catch (err) {
         res.status(500).send({ message: err.message })
     }
@@ -124,4 +186,4 @@ const update = async (req, res) => {
 
 };
 
-export { create, findAll, findById, update }
+export { create, findAll, topVeiculo, findById, searchByPlaca, update }
