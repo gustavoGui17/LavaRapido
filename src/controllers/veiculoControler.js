@@ -5,14 +5,15 @@ import {
     topVeiculoService,
     findByIdService,
     searchByPlacaService,
-    updateService
+    updateService,
+    byUserService
 } from "../services/veiculoService.js";
 
 const create = async (req, res) => {
     try {
-        const { placa, modelo, cor, nomeCliente, contato, usuario } = req.body;
+        const { placa, modelo, cor, nomeCliente, contato } = req.body;
 
-        if (!placa || !modelo || !cor || !nomeCliente || !contato || !usuario) {
+        if (!placa || !modelo || !cor || !nomeCliente || !contato) {
             return res.status(400).send({ message: "Por favor, preencha todos os campos" });
         }
 
@@ -93,7 +94,7 @@ const topVeiculo = async (req, res) => {
         const veiculo = await topVeiculoService()
 
         if (!veiculo) {
-            return res.status(400).send({ message: "NãO tem Veiculos cadastrados" });
+            return res.status(400).send({ message: "Não tem Veiculos cadastrados" });
         }
 
         res.send({
@@ -160,30 +161,53 @@ const searchByPlaca = async (req, res) => {
     }
 };
 
-const update = async (req, res) => {
+const byUser = async (req, res) => {
     try {
-        const { placa, modelo, cor, nomeCliente, contato } = req.body;
+        const id = req.userId;
+        const veiculo = await byUserService(id);
 
-        if (!placa && !modelo && !cor && !nomeCliente && !contato) {
-            res.status(400).send({ message: "Por favor prencher um campo para editar" });
-        }
+        return res.send({
+            results: veiculo.map(item => ({
+                id: item._id,
+                placa: item.placa,
+                modelo: item.modelo,
+                cor: item.cor,
+                nomeCliente: item.nomeCliente,
+                contato: item.contato
+            }))
+        })
 
-        const { id, veiculo } = req;
-
-        await updateService(
-            id,
-            placa,
-            modelo,
-            cor,
-            nomeCliente,
-            contato
-        )
-
-        res.send({ message: "Veiculo alterado com sucesso" })
     } catch (err) {
         res.status(500).send({ message: err.message })
     }
+}
 
-};
+const update = async (req, res) => {
+    try {
+        const { placa, modelo, cor, nomeCliente, contato, status } = req.body;
+        const { id } = req.params;
 
-export { create, findAll, topVeiculo, findById, searchByPlaca, update }
+        if (!placa && !modelo && !cor && !nomeCliente && !contato && !status) {
+            return res.status(400).send({ message: "Selecione o campo para atualizar" });
+        }
+
+        const veiculo = await findByIdService(id);
+
+        console.log(veiculo);
+
+        if (veiculo.usuario._id.toString() != req.userId) {
+            return res.status(400).send({
+                message: "Voce não pode atualizar esse veiculo"
+            })
+        }
+
+        await updateService(id, placa, modelo, cor, nomeCliente, contato, status);
+
+        return res.send({ message: "Atualização com sucesso" })
+
+    } catch (err) {
+        res.status(500).send({ message: err.message })
+    }
+}
+
+export { create, findAll, topVeiculo, findById, searchByPlaca, byUser, update }

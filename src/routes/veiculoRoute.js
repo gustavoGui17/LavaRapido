@@ -1,5 +1,5 @@
 import express from 'express';
-import { create, findAll, findById, topVeiculo, searchByPlaca, update } from "../controllers/veiculoControler.js";
+import { create, findAll, findById, topVeiculo, searchByPlaca, byUser, update } from "../controllers/veiculoControler.js";
 import { validId, validVeiculo } from '../middlewares/global.middlewares.js'
 import { authMiddleware } from '../middlewares/auth.middlerware.js'
 
@@ -10,6 +10,7 @@ router.get("/", findAll);
 router.get("/top", topVeiculo);
 router.get("/search", searchByPlaca)
 router.get("/:id", validId, validVeiculo, findById);
-router.patch("/:id", validId, validVeiculo, update);
+router.get("byUser", authMiddleware, byUser)
+router.patch("/:id", authMiddleware, update)
 
 export default router
