@@ -5,46 +5,41 @@ import jwt, { decode } from "jsonwebtoken"
 dotenv.config();
 
 export const authMiddleware = (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
 
-    try {
-        const { authorization } = req.headers;
-
-        if (!authorization) {
-            return res.send(401)
-        }
-
-        const parts = authorization.split(" ")
-
-        if (parts.length !== 2) {
-            return res.send(401)
-        }
-
-        const [Schema, token] = parts
-
-        if (Schema !== "Bearer") {
-            return res.send(401)
-        }
-
-        jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
-            if (error) {
-                return res.status(401).send({ mensage: "Token invalid!" });
-            }
-        
-
-        const user = await userService.findByIdService(decoded.id);
-
-        if (!user || !user.id) {
-            return res.status(401).send({ message: "Invalid Token! "});
-        }
-
-        req.userId = user._id;
-
-        return next()
-
-        })
-        
-    } catch (error) {
-        res.status(500).send(err.mensage);
+    if (!authorization) {
+      return res.status(401).send({ message: "Token não fornecido" });
     }
 
-}
+    const parts = authorization.split(" ");
+
+    if (parts.length !== 2) {
+      return res.status(401).send({ message: "Token mal formatado" });
+    }
+
+    const [schema, token] = parts;
+
+    if (schema !== "Bearer") {
+      return res.status(401).send({ message: "Token com esquema inválido" });
+    }
+
+    jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
+      if (error) {
+        return res.status(401).send({ message: "Token inválido" });
+      }
+
+      const user = await userService.findByIdService(decoded.id);
+
+      if (!user || !user._id) {
+        return res.status(401).send({ message: "Usuário não encontrado" });
+      }
+
+      req.userId = user._id.toString();
+
+      return next();
+    });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};

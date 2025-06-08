@@ -28,13 +28,9 @@ export const topVeiculoService = () => Veiculo.findOne()
 
 export const findByIdService = (id) => Veiculo.findById(id).populate("usuario");
 
-export const searchByPlacaService = (placa) =>
-  Veiculo.find({
-    placa: { $regex: placa || "", $options: "i" },
-  }).sort({ _id: -1 }).populate("usuario");
+export const searchByPlacaService = (placa) => Veiculo.find({placa: { $regex: placa || "", $options: "i" },}).sort({ _id: -1 }).populate("usuario");
 
-export const byUserService = (id) =>
-  Veiculo.find({ usuario: id }).sort({ _id: -1 }).populate("usuario");
+export const byUserService = (id) => Veiculo.find({ usuario: id }).sort({ _id: -1 }).populate("usuario");
 
 export const updateService = (id, placa, modelo, cor, nomeCliente, contato, status) =>
   Veiculo.findOneAndUpdate({ _id: id },
@@ -43,3 +39,5 @@ export const updateService = (id, placa, modelo, cor, nomeCliente, contato, stat
       rawRessult: true,
     }
   );
+
+export const eraseService = (id) => Veiculo.findByIdAndDelete({ _id: id });

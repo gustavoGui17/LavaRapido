@@ -6,7 +6,8 @@ import {
     findByIdService,
     searchByPlacaService,
     updateService,
-    byUserService
+    byUserService,
+    eraseService
 } from "../services/veiculoService.js";
 
 const create = async (req, res) => {
@@ -193,8 +194,6 @@ const update = async (req, res) => {
 
         const veiculo = await findByIdService(id);
 
-        console.log(veiculo);
-
         if (veiculo.usuario._id.toString() != req.userId) {
             return res.status(400).send({
                 message: "Voce não pode atualizar esse veiculo"
@@ -210,4 +209,26 @@ const update = async (req, res) => {
     }
 }
 
-export { create, findAll, topVeiculo, findById, searchByPlaca, byUser, update }
+const erase = async (req, res) => {
+    try {
+
+        const {id} = req.params;
+
+        const veiculo = await findByIdService(id);
+
+        if (veiculo.usuario._id.toString() != req.userId) {
+            return res.status(400).send({
+                message: "Voce não pode deletar esse veiculo"
+            })
+        }
+
+        await eraseService(id);
+
+        return res.send({ message: "Veiculo deletado com sucesso" })
+
+    } catch (err) {
+        res.status(500).send({ message: err.message })
+    }
+}
+
+export { create, findAll, topVeiculo, findById, searchByPlaca, byUser, update, erase }
