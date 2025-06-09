@@ -1,7 +1,7 @@
 import express from 'express';
-import { create, findAll, findById, topVeiculo, searchByPlaca, byUser, update, erase } from "../controllers/veiculoControler.js";
-import { validId, validVeiculo } from '../middlewares/global.middlewares.js'
-import { authMiddleware } from '../middlewares/auth.middlerware.js'
+import { create, findAll, findById, topVeiculo, searchByPlaca, byUser, update, erase } from "../controllers/veiculoController.js";
+import { validId, validVeiculo } from '../middlewares/globalMiddlewares.js'
+import { authMiddleware } from '../middlewares/authMiddlerware.js'
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ router.get("/search", searchByPlaca);
 router.get("/:id", validId, validVeiculo, findById);
 router.get("byUser", authMiddleware, byUser);
 router.patch("/:id", authMiddleware, update);
-router.delete("/:id",authMiddleware, erase);
+router.delete("/:id", authMiddleware, erase);
 
 export default router

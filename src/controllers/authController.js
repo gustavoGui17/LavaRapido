@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { loginService, generateToken } from '../services/auth.service.js'
+import { loginService, generateToken } from '../services/authService.js'
 
 const login = async (req, res) => {
    const { email, password } = req.body;

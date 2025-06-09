@@ -1,6 +1,6 @@
 import  {Router}  from 'express';
-import userController from "../controllers/userControler.js"
-import { validId, validUser } from '../middlewares/global.middlewares.js'
+import userController from "../controllers/userController.js"
+import { validId, validUser } from '../middlewares/globalMiddlewares.js'
 const router = Router();
 
 router.post("/", userController.create)

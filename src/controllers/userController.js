@@ -85,13 +85,4 @@ const update = async (req, res) => {
 
 };
 
-const getUsersWithVehicles = async (req, res) => {
-    try {
-        const users = await User.find().populate('veiculos');
-        res.status(200).send(users);
-    } catch (err) {
-        res.status(500).send({ message: err.message });
-    }
-};
-
 export default  { create, findAll, findById, update };
